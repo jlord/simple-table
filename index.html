@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- TODO Change the description and author of your site below  -->
+    <meta name="description" content="Federal Government 2017">
+    <meta name="author" content="Jessica Lord">
+    <!-- TODO Change the title of your site below  -->
+    <title>Simple Table Display</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script type="text/javascript" src="js/tabletop.js"></script>
+    <script type="text/javascript" src="js/sheetsee.js"></script>
+  </head>
+  <body>
+    <header>
+      <div class="wrapper">
+        <h1>Simple Table Display</h1>
+        <h3>Subtitle about your site.</h3>
+        <p>Even more information about your site.</p>
+    </header>
+
+    <div id="data" class="wrapper">Loading...</div>
+
+    <script type="text/javascript">
+    document.addEventListener('DOMContentLoaded', function () {
+      // TODO Swap out the key of your spreadsheet below
+      var URL = '17H2IL-o2G-JAwaukZCZ0aCfL09nEthZb_EUrB3wikwY'
+      Tabletop.init({ key: URL, callback: createTableContent, simpleSheet: true })
+    })
+
+    function createTableContent(data) {
+      var table = {}
+      table.keys = Object.keys(data[0])
+      table.th = '<thead><tr>'
+      table.row = '{{#rows}}<tr>'
+      table.keys.forEach(function (key, i) {
+        table.th += '<th>' + key + '</th>'
+        table.row += '<td>{{' + key + '}}</td>'
+        if (i === table.keys.length - 1) {
+          table.th += '</tr></thead>'
+          table.row += '{{/rows}}'
+        }
+      })
+      createTableHTML(table, data)
+    }
+
+    function createTableHTML(table, data) {
+      var tableHTML = '<table>' + table.th + '<tbody>' + table.row + '</tbody></table>'
+      Sheetsee.ich.addTemplate('data_template', tableHTML)
+      displayTable(data)
+    }
+
+    function displayTable(data) {
+      var options = {'data': data.reverse(), 'tableDiv': '#data'}
+      Sheetsee.makeTable(options)
+    }
+    </script>
+  </body>
+</html>
